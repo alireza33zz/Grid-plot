@@ -3,7 +3,7 @@ using Plots
 
 ENV["GKSwstype"] = "png"
 ENV["GKS_FILEPATH"] = "SingleLineDiagram.png"
-ENV["GKSwstype_DPI"] = "300"
+ENV["GKSwstype_DPI"] = "600"
 
 selected_indices = [34, 47, 70, 73, 74, 83, 178, 208, 225, 248, 249, 264, 276, 289, 314, 320,
     327, 337, 342, 349, 387, 388, 406, 458, 502, 522, 539, 556, 562, 563, 611, 614, 619, 
@@ -68,6 +68,7 @@ selected_indices = [34, 47, 70, 73, 74, 83, 178, 208, 225, 248, 249, 264, 276, 2
         906 => (0, -3)
     )
 
+#offsets = Dict(k => (v[1] * 1.25, v[2] * 1.25) for (k, v) in offsets)
 # Define the path to your Excel file and sheet name
 file_path = "DSSGraph_Output.xlsx"  # Replace with your actual file path
 sheet_name = "DSSGraph_Output"      # Replace with your actual sheet name
@@ -87,16 +88,15 @@ Y2_values = matrix_data[:, 5]  # Y2
 p = plot(
     xlabel = "X Coordinate",
     ylabel = "Y Coordinate",
-    title = "Single-Line Diagram of LV_Eu_test",
     legend = false,
     grid = false,
     framestyle=:none,
-    size=(6000, 4000),
-    titlefontsize=80
+    size=(6300, 4000),
+    topmargin=2Plots.Measures.cm
 )
 
-annotate!(p, (X1_values[2], Y1_values[2]-1.0, text("*", :red, 120)))
-annotate!(p, (X1_values[2], Y1_values[2]+5, text("Substation", :red, 70)))
+annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 150)))
+annotate!(p, (X1_values[2], Y1_values[2]+5, text("Substation", :red, 90)))
 # Add lines to the plot
 for i in 2:length(X1_values)
     X1, Y1, X2, Y2 = X1_values[i], Y1_values[i], X2_values[i], Y2_values[i]
@@ -113,7 +113,7 @@ for j in selected_indices
     X2, Y2 = X2_values[j], Y2_values[j]
     X2 = X2 + offsets[j][1]  # Horizontal offset
     Y2 = Y2 + offsets[j][2]  # Vertical offset
-    annotate!(p, (X2, Y2, text(string(Bus[j]), :black, 75)))
+    annotate!(p, (X2, Y2, text(string(Bus[j]), :black, 80)))
 end
 
 
