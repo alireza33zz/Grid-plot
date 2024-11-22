@@ -67,7 +67,6 @@ selected_indices = [34, 47, 70, 73, 74, 83, 178, 208, 225, 248, 249, 264, 276, 2
         900 => (4, -1),
         906 => (0, -3)
     )
-
 #offsets = Dict(k => (v[1] * 1.25, v[2] * 1.25) for (k, v) in offsets)
 # Define the path to your Excel file and sheet name
 file_path = "DSSGraph_Output.xlsx"  # Replace with your actual file path
