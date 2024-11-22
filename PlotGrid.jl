@@ -99,7 +99,7 @@ annotate!(p, (X1_values[2], Y1_values[2]+5, text("Substation", :red, 90)))
 # Add lines to the plot
 for i in 2:length(X1_values)
     X1, Y1, X2, Y2 = X1_values[i], Y1_values[i], X2_values[i], Y2_values[i]
-    plot!([X1, X2], [Y1, Y2], lw=10, color=:blue, alpha=0.9)
+    plot!([X1, X2], [Y1, Y2], lw=15, color=:blue, alpha=0.9)
     
 end
 
