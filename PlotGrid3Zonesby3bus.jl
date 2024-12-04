@@ -73,18 +73,31 @@ Zone1 = [101, 226, 166]
 Zone2 = [247, 332, 604]
 Zone3 = [373, 666, 839]
 Zone = vcat(Zone1, Zone2, Zone3)
+
+Name = Dict(
+    101 => "Z1.1",
+    226 => "Z1.2",
+    166 => "Z1.3",
+    247 => "Z2.1",
+    332 => "Z2.2",
+    604 => "Z2.3",
+    373 => "Z3.1",
+    666 => "Z3.2",
+    839 => "Z3.3"
+)
+
 offsets1 = Dict(
     25 => (-1, -4),
     32 => (-1, -4),
     59 => (-1, -4),
-    101 => (-2, -4),
+    101 => (-3, -4),
     127 => (5, -0),
     145 => (5, 0),
     155 => (0, 5),
-    166 => (6, 0),
+    166 => (8, 0),
     171 => (0, 5),
     196 => (-5, 0),
-    226 => (5, 0),
+    226 => (6, 0),
     247 => (-6, 2),
     263 => (5, 0.0),
     310 => (0, 5),
@@ -95,18 +108,18 @@ offsets1 = Dict(
     508 => (-5, 0),
     559 => (-5, 1),
     596 => (-4.5, 2),
-    604 => (3, 5),
+    604 => (4, 5),
     373 => (-3, -4),
     391 => (-1, -5),
     578 => (-4, 2),
-    666 => (0, 6),
+    666 => (0, 7),
     686 => (5, 0),
     691 => (5, 0),
     707 => (5, 0),
     718 => (5, -0.5),
     745 => (5, -0.5),
     794 => (5, -0.5),
-    839 => (6, -2)
+    839 => (7, -2)
 )
 
 #offsets = Dict(k => (v[1] * 1.25, v[2] * 1.25) for (k, v) in offsets)
@@ -147,12 +160,12 @@ end
 
 for j in Zone1
     X2, Y2 = X2_values[j], Y2_values[j]
-    annotate!(p, (X2, Y2-1.0, text("*", :magenta, 150)))
+    annotate!(p, (X2, Y2-1.0, text("*", :red, 150)))
 end
 
 for j in Zone2
     X2, Y2 = X2_values[j], Y2_values[j]
-    annotate!(p, (X2, Y2-1.0, text("*", :orange, 150)))
+    annotate!(p, (X2, Y2-1.0, text("*", :red, 150)))
 end
 
 for j in Zone3
@@ -165,7 +178,7 @@ for j in Zone
     X2, Y2 = X2_values[j], Y2_values[j]
     X2 = X2 + (offsets1[j][1]*CFT)  # Horizontal offset
     Y2 = Y2 + (offsets1[j][2]*CFT)  # Vertical offset
-    annotate!(p, (X2, Y2, text(string(Bus[j]), :black, 120)))
+    annotate!(p, (X2, Y2, text(string(Name[j]), :black, 120)))
 end
 
 # Show the plot
