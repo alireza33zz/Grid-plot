@@ -2,7 +2,7 @@ using XLSX
 using Plots
 
 ENV["GKSwstype"] = "png"
-ENV["GKS_FILEPATH"] = "SingleLineDiagram.png"
+ENV["GKS_FILEPATH"] = "SingleLineDiagramLines.png"
 ENV["GKSwstype_DPI"] = "600"
 
 selected_indices = [34, 47, 70, 73, 74, 83, 178, 208, 225, 248, 249, 264, 276, 289, 314, 320,

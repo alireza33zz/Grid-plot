@@ -14,7 +14,7 @@ using XLSX
 using Plots
 
 ENV["GKSwstype"] = "png"
-ENV["GKS_FILEPATH"] = "SingleLineDiagram.png"
+ENV["GKS_FILEPATH"] = "SingleLineDiagram2.png"
 ENV["GKSwstype_DPI"] = "600"
 
 
