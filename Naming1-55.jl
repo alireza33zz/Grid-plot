@@ -13,8 +13,8 @@ index_dict = Dict(70 => 1, 34 => 2, 47 => 3, 83 => 4, 73 => "5 & 6", 74 => "5 & 
 using XLSX
 using Plots
 
-ENV["GKSwstype"] = "png"
-ENV["GKS_FILEPATH"] = "SingleLineDiagram2.png"
+ENV["GKSwstype"] = "svg"
+ENV["GKS_FILEPATH"] = "SingleLineDiagram2.svg"
 ENV["GKSwstype_DPI"] = "600"
 
 
@@ -128,4 +128,4 @@ end
 display(p)
 
 # Save the plot as an image
-savefig(p, "SingleLineDiagram2.png")
+savefig(p, "SingleLineDiagram2.svg")
