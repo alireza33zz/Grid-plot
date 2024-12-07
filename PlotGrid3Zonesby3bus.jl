@@ -1,9 +1,9 @@
 using XLSX
 using Plots
 
-ENV["GKSwstype"] = "svg"
-ENV["GKS_FILEPATH"] = "SingleLineDiagramLines.svg"
-ENV["GKSwstype_DPI"] = "600"
+ENV["GKSwstype"] = "pdf"
+ENV["GKS_FILEPATH"] = "SingleLineDiagramLines.pdf"
+ENV["GKSwstype_DPI"] = "1200"
 
 selected_indices = [34, 47, 70, 73, 74, 83, 178, 208, 225, 248, 249, 264, 276, 289, 314, 320,
     327, 337, 342, 349, 387, 388, 406, 458, 502, 522, 539, 556, 562, 563, 611, 614, 619, 
@@ -185,4 +185,4 @@ end
 display(p)
 
 # Save the plot as an image
-savefig(p, "SingleLineDiagramLines.svg")
+savefig(p, "SingleLineDiagramLines.pdf")
