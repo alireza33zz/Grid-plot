@@ -93,8 +93,7 @@ Y2_values = matrix_data[:, 5]  # Y2
 
 # Initialize a plot
 p = plot(
-    title = "Load Buses",
-    dpi = 600,
+    dpi = 300,
     legend = false,
     grid = false,
     framestyle=:none,
