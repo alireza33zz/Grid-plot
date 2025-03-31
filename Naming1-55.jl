@@ -4,7 +4,7 @@ selected_indices = [70, 34, 47, 83, 73, 74, 178, 208, 264, 225, 248, 249, 327, 3
                     813, 780, 835, 898, 906, 886, 899]
 
 index_dict = Dict(70 => 1, 34 => 2, 47 => 3, 83 => 4, 73 => "5 & 6", 74 => " ", 178 => 7, 208 => 8, 264 => 9, 225 => 10, 
-                    248 => "11 & 12", 249 => " ", 327 => 13, 320 => 14, 314 => 15, 276 => 16, 289 => 17, 387 => 18, 342 => 19, 
+                    248 => "11 & 12", 249 => " ", 327 => 17, 320 => 16, 314 => 15, 276 => 14, 289 => 13, 387 => 18, 342 => 19, 
                     388 => 20, 349 => 21, 337 => 22, 406 => 23, 629 => 24, 563 => 25, 502 => 26, 611 => 27, 562 => 28, 
                     682 => 29, 676 => 30, 619 => 31, 639 => 32, 458 => 33, 556 => 34, 539 => 35, 522 => 36, 785 => 37, 
                     614 => 38, 688 => 39, 817 => 40, 860 => 41, 861 => 42, 778 => 43, 701 => 44, 702 => 45, 900 => 46, 
@@ -93,8 +93,8 @@ Y2_values = matrix_data[:, 5]  # Y2
 
 # Initialize a plot
 p = plot(
-    xlabel = "X Coordinate",
-    ylabel = "Y Coordinate",
+    title = "Load Buses",
+    dpi = 600,
     legend = false,
     grid = false,
     framestyle=:none,
@@ -102,12 +102,12 @@ p = plot(
     topmargin=2Plots.Measures.cm
 )
 
-annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 150)))
+annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 180)))
 annotate!(p, (X1_values[2], Y1_values[2]+5, text("Substation", :red, 90)))
 # Add lines to the plot
 for i in 2:length(X1_values)
     X1, Y1, X2, Y2 = X1_values[i], Y1_values[i], X2_values[i], Y2_values[i]
-    plot!([X1, X2], [Y1, Y2], lw=15, color=:blue, alpha=0.9)
+    plot!([X1, X2], [Y1, Y2], lw=18, color=:blue, alpha=1.0)
     
 end
 
@@ -129,3 +129,5 @@ display(p)
 
 # Save the plot as an image
 savefig(p, "SingleLineDiagram2.pdf")
+savefig(p, "SingleLineDiagram2.png")
+savefig(p, "SingleLineDiagram2.svg")
