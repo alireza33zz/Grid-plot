@@ -98,7 +98,9 @@ p = plot(
     grid = false,
     framestyle=:none,
     size=(6300, 4000),
-    topmargin=2Plots.Measures.cm
+    top_margin=2Plots.Measures.cm,
+    bottom_margin=7Plots.Measures.cm,
+    right_margin=7Plots.Measures.cm
 )
 
 annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 180)))
@@ -114,19 +116,19 @@ for j in selected_indices
     X2, Y2 = X2_values[j], Y2_values[j]
     annotate!(p, (X2, Y2-0.5, text("*", :red, 90)))
 end
-
+#=
 for j in selected_indices
     X2, Y2 = X2_values[j], Y2_values[j]
     X2 = X2 + offsets[j][1]  # Horizontal offset
     Y2 = Y2 + offsets[j][2]  # Vertical offset
     annotate!(p, (X2, Y2, text(string(index_dict[j]), :black, 120, alpha=1)))
 end
-
+=#
 
 # Show the plot
 display(p)
 
 # Save the plot as an image
-savefig(p, "SingleLineDiagram2.pdf")
-savefig(p, "SingleLineDiagram2.png")
-savefig(p, "SingleLineDiagram2.svg")
+savefig(p, "SingleLineDiagram3.pdf")
+savefig(p, "SingleLineDiagram3.png")
+savefig(p, "SingleLineDiagram3.svg")
