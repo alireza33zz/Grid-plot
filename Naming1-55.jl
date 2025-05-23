@@ -3,12 +3,15 @@ selected_indices = [70, 34, 47, 83, 73, 74, 178, 208, 264, 225, 248, 249, 327, 3
                     458, 556, 539, 522, 785, 614, 688, 817, 860, 861, 778, 701, 702, 900, 896, 755, 
                     813, 780, 835, 898, 906, 886, 899]
 
+rooftop_set = [629, 886, 906, 337, 556, 458, 34, 248, 320, 249, 289, 682, 701, 896]
+
 index_dict = Dict(70 => 1, 34 => 2, 47 => 3, 83 => 4, 73 => "5 & 6", 74 => " ", 178 => 7, 208 => 8, 264 => 9, 225 => 10, 
                     248 => "11 & 12", 249 => " ", 327 => 17, 320 => 16, 314 => 15, 276 => 14, 289 => 13, 387 => 18, 342 => 19, 
                     388 => 20, 349 => 21, 337 => 22, 406 => 23, 629 => 24, 563 => 25, 502 => 26, 611 => 27, 562 => 28, 
                     682 => 29, 676 => 30, 619 => 31, 639 => 32, 458 => 33, 556 => 34, 539 => 35, 522 => 36, 785 => 37, 
                     614 => 38, 688 => 39, 817 => 40, 860 => 41, 861 => 42, 778 => 43, 701 => 44, 702 => 45, 900 => 46, 
                     896 => 47, 755 => 48, 813 => 49, 780 => 50, 835 => 51, 898 => 52, 906 => 53, 886 => 54, 899 => 55)
+     
                     
 using XLSX
 using Plots
@@ -99,8 +102,8 @@ p = plot(
     framestyle=:none,
     size=(6300, 4000),
     top_margin=2Plots.Measures.cm,
-    bottom_margin=7Plots.Measures.cm,
-    right_margin=7Plots.Measures.cm
+    bottom_margin=1Plots.Measures.cm,
+    right_margin=1Plots.Measures.cm
 )
 
 annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 180)))
@@ -112,18 +115,44 @@ for i in 2:length(X1_values)
     
 end
 
+for j in setdiff(selected_indices, rooftop_set)
+    X2, Y2 = X2_values[j], Y2_values[j]
+    annotate!(p, (X2, Y2-0.5, text("*", :black, 120)))
+end
+
+for j in rooftop_set
+    X2, Y2 = X2_values[j], Y2_values[j]
+    annotate!(p, (X2, Y2-0.5, text("*", :red, 140)))
+end
+
+for j in [786, 617, 881]
+    X2, Y2 = X2_values[j], Y2_values[j]
+    annotate!(p, (X2, Y2-1, text("*", :red, 160)))
+end
+
+#
 for j in selected_indices
     X2, Y2 = X2_values[j], Y2_values[j]
-    annotate!(p, (X2, Y2-0.5, text("*", :red, 90)))
+    X2 = X2 + 1 * offsets[j][1]  # Horizontal offset
+    Y2 = Y2 + 1 * offsets[j][2]  # Vertical offset
+    annotate!(p, (X2, Y2, text(string(index_dict[j]), :black, 100, alpha=1)))
 end
-#=
-for j in selected_indices
-    X2, Y2 = X2_values[j], Y2_values[j]
-    X2 = X2 + offsets[j][1]  # Horizontal offset
-    Y2 = Y2 + offsets[j][2]  # Vertical offset
-    annotate!(p, (X2, Y2, text(string(index_dict[j]), :black, 120, alpha=1)))
-end
-=#
+#
+
+X2, Y2 = X2_values[786], Y2_values[786]
+X2 = X2 + 0  # Horizontal offset
+Y2 = Y2 + (-4)  # Vertical offset
+annotate!(p, (X2, Y2, text("DER2", :red, 100, alpha=1)))
+
+X2, Y2 = X2_values[617], Y2_values[617]
+X2 = X2 + 2  # Horizontal offset
+Y2 = Y2 + 5  # Vertical offset
+annotate!(p, (X2, Y2, text("DER1", :red, 100, alpha=1)))
+
+X2, Y2 = X2_values[881], Y2_values[881]
+X2 = X2 + 0  # Horizontal offset
+Y2 = Y2 + (-5)  # Vertical offset
+annotate!(p, (X2, Y2, text("DER3", :red, 100, alpha=1)))
 
 # Show the plot
 display(p)
