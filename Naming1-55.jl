@@ -14,7 +14,9 @@ index_dict = Dict(70 => 1, 34 => 2, 47 => 3, 83 => 4, 73 => "5 & 6", 74 => " ", 
      
                     
 using XLSX
-using Plots
+using Plots, Plots.PlotMeasures
+using StatsPlots
+using Printf
 
 ENV["GKSwstype"] = "pdf"
 ENV["GKS_FILEPATH"] = "SingleLineDiagram2.pdf"
@@ -101,9 +103,11 @@ p = plot(
     grid = false,
     framestyle=:none,
     size=(6300, 4000),
+    fontfamily = "Courier",
     top_margin=2Plots.Measures.cm,
     bottom_margin=1Plots.Measures.cm,
     right_margin=1Plots.Measures.cm
+
 )
 
 annotate!(p, (X1_values[2], Y1_values[2]-1.25, text("*", :red, 180)))
@@ -111,7 +115,7 @@ annotate!(p, (X1_values[2], Y1_values[2]+5, text("Substation", :red, 90)))
 # Add lines to the plot
 for i in 2:length(X1_values)
     X1, Y1, X2, Y2 = X1_values[i], Y1_values[i], X2_values[i], Y2_values[i]
-    plot!([X1, X2], [Y1, Y2], lw=18, color=:blue, alpha=1.0)
+    plot!([X1, X2], [Y1, Y2], lw=18, color=:blue)
     
 end
 
@@ -135,29 +139,29 @@ for j in selected_indices
     X2, Y2 = X2_values[j], Y2_values[j]
     X2 = X2 + 1 * offsets[j][1]  # Horizontal offset
     Y2 = Y2 + 1 * offsets[j][2]  # Vertical offset
-    annotate!(p, (X2, Y2, text(string(index_dict[j]), :black, 100, alpha=1)))
+    annotate!(p, (X2, Y2, text(string(index_dict[j]), :black, 100)))
 end
 #
 
 X2, Y2 = X2_values[786], Y2_values[786]
 X2 = X2 + 0  # Horizontal offset
 Y2 = Y2 + (-4)  # Vertical offset
-annotate!(p, (X2, Y2, text("DER2", :red, 100, alpha=1)))
+annotate!(p, (X2, Y2, text("DER2", :red, 100)))
 
 X2, Y2 = X2_values[617], Y2_values[617]
 X2 = X2 + 2  # Horizontal offset
 Y2 = Y2 + 5  # Vertical offset
-annotate!(p, (X2, Y2, text("DER1", :red, 100, alpha=1)))
+annotate!(p, (X2, Y2, text("DER1", :red, 100)))
 
 X2, Y2 = X2_values[881], Y2_values[881]
 X2 = X2 + 0  # Horizontal offset
 Y2 = Y2 + (-5)  # Vertical offset
-annotate!(p, (X2, Y2, text("DER3", :red, 100, alpha=1)))
+annotate!(p, (X2, Y2, text("DER3", :red, 100)))
 
 # Show the plot
 display(p)
 
 # Save the plot as an image
-savefig(p, "SingleLineDiagram3.pdf")
-savefig(p, "SingleLineDiagram3.png")
-savefig(p, "SingleLineDiagram3.svg")
+savefig(p, "SingleLineDiagram4.pdf")
+savefig(p, "SingleLineDiagram4.png")
+savefig(p, "SingleLineDiagram4.svg")
