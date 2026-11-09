@@ -1,0 +1,49 @@
+# Formerly PlotGrid3Zonesby3bus.jl
+title = "Three zones, three buses each"
+description = "Three representative buses per zone, labelled Z<zone>.<n>."
+output = "SingleLineDiagramLines"
+formats = ["pdf"]
+
+[lines]
+width = 15
+color = "blue"
+alpha = 0.9
+
+[substation]
+marker = { color = "red", size = 180, dy = -1.25 }
+label = { text = "Substation", color = "red", size = 110, dy = 5 }
+
+[[markers]]
+name = "Zone representatives"
+buses = [101, 226, 166, 247, 332, 604, 373, 666, 839]
+color = "red"
+size = 150
+dy = -1.0
+
+[[labels]]
+name = "Zone names"
+color = "black"
+size = 120
+scale = 1.2   # multiplies every offset below
+
+[labels.text]
+101 = "Z1.1"
+226 = "Z1.2"
+166 = "Z1.3"
+247 = "Z2.1"
+332 = "Z2.2"
+604 = "Z2.3"
+373 = "Z3.1"
+666 = "Z3.2"
+839 = "Z3.3"
+
+[labels.offsets]
+101 = [-3, -4]
+226 = [6, 0]
+166 = [8, 0]
+247 = [-6, 2]
+332 = [0, -6]
+604 = [4, 5]
+373 = [-3, -4]
+666 = [0, 7]
+839 = [7, -2]

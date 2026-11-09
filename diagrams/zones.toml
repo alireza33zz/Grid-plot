@@ -1,0 +1,78 @@
+# Formerly PlotGrids2.jl
+title = "Three zones"
+description = "Eleven buses per zone, colour-coded by zone and labelled with bus numbers."
+output = "SingleLineDiagramZones"
+formats = ["png"]
+
+[lines]
+width = 15
+color = "blue"
+alpha = 0.9
+
+[substation]
+marker = { color = "black", size = 150, dy = -1.25 }
+label = { text = "Substation", color = "red", size = 90, dy = 5 }
+
+[[markers]]
+name = "Zone 1"
+buses = [25, 32, 59, 101, 127, 145, 155, 166, 171, 196, 226]
+color = "magenta"
+size = 120
+dy = -1.0
+
+[[markers]]
+name = "Zone 2"
+buses = [247, 263, 310, 325, 332, 453, 475, 508, 559, 596, 604]
+color = "orange"
+size = 120
+dy = -1.0
+
+[[markers]]
+name = "Zone 3"
+buses = [373, 391, 578, 666, 686, 691, 707, 718, 745, 794, 839]
+color = "red"
+size = 120
+dy = -1.0
+
+[[labels]]
+name = "Bus numbers"
+color = "black"
+size = 80
+
+[labels.offsets]
+# Zone 1
+25 = [-1, -4]
+32 = [-1, -4]
+59 = [-1, -4]
+101 = [-2, -4]
+127 = [5, 0]
+145 = [5, 0]
+155 = [0, 5]
+166 = [5, 0]
+171 = [0, 5]
+196 = [-5, 0]
+226 = [5, 0]
+# Zone 2
+247 = [-5, 2]
+263 = [5, 0]
+310 = [0, 5]
+325 = [0, 5]
+332 = [0, -5]
+453 = [-5, 0]
+475 = [-5, 0]
+508 = [-5, 0]
+559 = [-5, 1]
+596 = [-4.5, 2]
+604 = [-5, 2]
+# Zone 3
+373 = [-2, -4]
+391 = [-1, -5]
+578 = [-4, 2]
+666 = [0, 5]
+686 = [5, 0]
+691 = [5, 0]
+707 = [5, 0]
+718 = [5, -0.5]
+745 = [5, -0.5]
+794 = [5, -0.5]
+839 = [5, -1]
