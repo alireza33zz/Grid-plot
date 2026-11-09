@@ -6,8 +6,8 @@ const DEFAULT_OUTDIR = joinpath(PROJECT_ROOT, "output")
 const USAGE = """
 Usage: julia gridplot.jl [options] [DIAGRAM ...]
 
-Render single-line diagrams of the feeder. With no DIAGRAM and no --all, an
-interactive menu lets you pick diagrams and output formats.
+Render single-line diagrams of the feeder. With no DIAGRAM and no --all, you
+are asked step by step which diagrams to render and in which format.
 
 Options:
   -a, --all             Render every diagram
@@ -101,22 +101,83 @@ function select_specs(specs, names)
 end
 
 """
-Interactive selection. Returns `(specs, formats)`, where `formats === nothing`
-means "use each diagram's own formats", or `nothing` if the user cancelled.
-"""
-function interactive_selection(specs)
-    menu = TerminalMenus.MultiSelectMenu(["$(s.id) — $(s.title)" for s in specs]; pagesize = 10)
-    println("Grid Plot — single-line diagram renderer")
-    chosen = TerminalMenus.request(
-        "Select diagrams ([space] toggle, [a] all, [enter] confirm, [q] quit):", menu)
-    isempty(chosen) && return nothing
+    parse_choice(reply, n; multiple) -> Union{Int, Vector{Int}, Nothing}
 
-    choices = ["Diagram defaults", "PNG", "PDF", "SVG", "PNG + PDF + SVG"]
-    pick = TerminalMenus.request("Output format:", TerminalMenus.RadioMenu(choices))
-    pick == -1 && return nothing
-    formats = pick == 1 ? nothing :
-              pick == 5 ? collect(SUPPORTED_FORMATS) : [lowercase(choices[pick])]
-    return specs[sort!(collect(chosen))], formats
+Interpret a typed answer to a numbered question with `n` options: a single
+number, or with `multiple = true` a comma/space-separated list of numbers or
+`a`/`all`. Returns `nothing` if the answer is not valid.
+"""
+function parse_choice(reply::AbstractString, n::Integer; multiple::Bool)
+    multiple && lowercase(reply) in ("a", "all") && return collect(1:n)
+    picks = [tryparse(Int, t) for t in split(reply, r"[,\s]+"; keepempty = false)]
+    (isempty(picks) || any(p -> p === nothing || !(1 <= p <= n), picks)) && return nothing
+    multiple && return unique!(Vector{Int}(picks))
+    return length(picks) == 1 ? only(picks) : nothing
+end
+
+"""
+    ask(question, options; multiple = false, default = nothing, input = stdin, output = stdout)
+
+Print `question` with numbered `options` and read answers until a valid one is
+given (see [`parse_choice`](@ref)). An empty answer selects `default` if set.
+Returns `nothing` if the user types `q` or input ends.
+"""
+function ask(question::AbstractString, options::AbstractVector{<:AbstractString};
+             multiple::Bool = false, default::Union{Nothing,Integer} = nothing,
+             input::IO = stdin, output::IO = stdout)
+    println(output)
+    printstyled(output, question, "\n"; bold = true)
+    width = ndigits(length(options))
+    for (i, opt) in enumerate(options)
+        println(output, "  ", lpad(i, width), ") ", opt)
+    end
+    hint = multiple ? "Numbers separated by commas, or 'a' for all" : "Number"
+    hint *= default === nothing ? "" : " [default $default]"
+    while true
+        print(output, hint, " ('q' to quit): ")
+        eof(input) && (println(output); return nothing)
+        reply = strip(readline(input))
+        isempty(reply) && default !== nothing && (reply = string(default))
+        lowercase(reply) in ("q", "quit") && return nothing
+        choice = parse_choice(reply, length(options); multiple)
+        choice === nothing || return choice
+        printstyled(output, "  \"", reply, "\" is not a valid choice, please try again.\n"; color = :yellow)
+    end
+end
+
+"""
+Ask, one question at a time, which diagrams to render, in which formats, and
+whether to preview them. Questions already answered on the command line
+(`formats`, `show`) are skipped. Returns `(; specs, formats, show)`, with
+`formats === nothing` meaning "use each diagram's own formats", or `nothing`
+if the user quit.
+"""
+function interactive_selection(specs; formats = nothing, show::Bool = false,
+                               input::IO = stdin, output::IO = stdout)
+    printstyled(output, "Grid Plot — single-line diagram renderer\n"; bold = true, color = :blue)
+
+    picks = ask("1. Which diagrams do you want to render?",
+                ["$(s.title)  ($(s.id))" for s in specs]; multiple = true, input, output)
+    picks === nothing && return nothing
+    selected = specs[sort(picks)]
+
+    if formats === nothing
+        options = ["Each diagram's default", "PNG", "PDF", "SVG", "All formats (PNG, PDF, SVG)"]
+        pick = ask("2. Which output format?", options; default = 1, input, output)
+        pick === nothing && return nothing
+        formats = pick == 1 ? nothing :
+                  pick == 5 ? collect(SUPPORTED_FORMATS) : [lowercase(options[pick])]
+    end
+
+    if !show
+        pick = ask("3. Open a preview window after saving each diagram?", ["No", "Yes"];
+                   default = 1, input, output)
+        pick === nothing && return nothing
+        show = pick == 2
+    end
+
+    println(output)
+    return (; specs = selected, formats, show)
 end
 
 function run_diagrams(specs, net::Network; outdir, formats, show::Bool, io::IO = stdout)
@@ -157,23 +218,21 @@ function main(args::AbstractVector{<:AbstractString} = ARGS)
             return 0
         end
 
-        formats = opts.formats
+        formats, show = opts.formats, opts.show
         if opts.all
             selected = specs
         elseif !isempty(opts.names)
             selected = select_specs(specs, opts.names)
-        elseif stdin isa Base.TTY
-            choice = interactive_selection(specs)
-            choice === nothing && (println("Nothing selected."); return 0)
-            selected, menu_formats = choice
-            formats = something(opts.formats, menu_formats, Some(nothing))
         else
-            throw(UsageError("no diagram selected; pass diagram names or --all (see --help)"))
+            choice = interactive_selection(specs; formats, show)
+            choice === nothing && (println("Nothing selected."); return 0)
+            (; formats, show) = choice
+            selected = choice.specs
         end
 
         net = load_network(opts.data)
         foreach(s -> validate(s, net), selected)   # fail fast before any slow rendering
-        run_diagrams(selected, net; outdir = opts.outdir, formats, show = opts.show)
+        run_diagrams(selected, net; outdir = opts.outdir, formats, show)
         return 0
     catch err
         err isa Union{UsageError,SpecError,ArgumentError} || rethrow()

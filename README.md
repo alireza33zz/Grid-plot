@@ -11,10 +11,12 @@ To add or tweak a figure, edit a TOML file. You don't need to touch the code.
 
 ```sh
 julia --project=. -e "using Pkg; Pkg.instantiate()"   # first time only
-julia gridplot.jl                                      # interactive menu
+julia gridplot.jl                                      # asks what to render
 ```
 
-The menu lets you tick the diagrams you want and pick the output format.
+You are asked, one question at a time, which diagrams to render (type numbers
+like `1,3`, or `a` for all), which output format to use, and whether to open a
+preview. Press Enter to accept a default, or `q` to quit.
 Figures are written to `output/`.
 
 ### Command line

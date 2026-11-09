@@ -8,7 +8,6 @@ sizes) is described in a TOML file under `diagrams/`; the code here is generic.
 module GridPlot
 
 using Plots
-using REPL.TerminalMenus: TerminalMenus
 using TOML
 using XLSX
 

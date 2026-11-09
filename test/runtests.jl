@@ -69,6 +69,28 @@ spec(toml::AbstractString) = parse_spec("test", GridPlot.TOML.parse(toml))
         @test GridPlot.main(["no-such-diagram"]) == 2
     end
 
+    @testset "interactive questions" begin
+        pc(r, n = 4; multiple = true) = GridPlot.parse_choice(r, n; multiple)
+        @test pc("a") == pc("ALL") == [1, 2, 3, 4]
+        @test pc("3, 1 3") == [3, 1]
+        @test pc("2"; multiple = false) == 2
+        @test pc("1,2"; multiple = false) === nothing
+        @test pc("a"; multiple = false) === nothing
+        @test pc("5") === pc("0") === pc("x") === pc("") === nothing
+
+        answer(lines; kw...) = GridPlot.interactive_selection(SPECS; kw...,
+            input = IOBuffer(join(lines, "\n") * "\n"), output = devnull)
+        r = answer(["9", "2,1", "", "2"])            # invalid, then diagrams 1 & 2; default format; preview
+        @test [s.id for s in r.specs] == [SPECS[1].id, SPECS[2].id]
+        @test r.formats === nothing && r.show
+        r = answer(["all", "5", "1"])
+        @test length(r.specs) == length(SPECS) && r.formats == ["png", "pdf", "svg"] && !r.show
+        r = answer(["1"]; formats = ["svg"], show = true)  # questions answered on the command line are skipped
+        @test r.formats == ["svg"] && r.show
+        @test answer(["q"]) === nothing
+        @test answer(["1", "3"]) === nothing                # input ends before the last question
+    end
+
     @testset "render" begin
         s = only(filter(s -> s.id == "zone_representatives", SPECS))
         p = render(s, NET)
